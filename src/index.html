@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Loading and Sorting</title>
+</head>
+
+<body>
+
+  <div class="table-container">
+    <h2 class="title">1. Сортировка через Data-Attributes (с Diff)</h2>
+    <table class="movie-table">
+      <thead>
+        <tr>
+          <th class="data-th" data-sort="id">id</th>
+          <th class="data-th" data-sort="title">title</th>
+          <th class="data-th" data-sort="year">year</th>
+          <th class="data-th" data-sort="imdb">imdb</th>
+        </tr>
+      </thead>
+      <tbody class="movie-tbody-data"></tbody>
+    </table>
+
+    <br><br>
+    <hr><br>
+
+    <h2 class="title">2. In-Memory Сортировка (с пересборкой DOM)</h2>
+    <table class="movie-table">
+      <thead>
+        <tr>
+          <th class="memory-th" data-sort="id">id</th>
+          <th class="memory-th" data-sort="title">title</th>
+          <th class="memory-th" data-sort="year">year</th>
+          <th class="memory-th" data-sort="imdb">imdb</th>
+        </tr>
+      </thead>
+      <tbody class="movie-tbody-memory"></tbody>
+    </table>
+  </div>
+
+</body>
+
+</html>
