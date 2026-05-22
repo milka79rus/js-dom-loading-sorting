@@ -1,5 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
+const initSortingApp = () => {
+  //  Выносим "магические числа" в константы
+  const SORT_INTERVAL_MS = 2000;
+  const IMDB_DECIMAL_PLACES = 2;
 
+  // Базовые данные фильмов
   const moviesData = [
     { id: 26, title: "Побег из Шоушенка", imdb: 9.3, year: 1994 },
     { id: 25, title: "Крёстный отец", imdb: 9.2, year: 1972 },
@@ -8,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 223, title: "Криминальное чтиво", imdb: 8.9, year: 1994 },
   ];
 
-
+  // Очередность сортировки по ТЗ
   const sortingSequence = [
     { key: "id", dir: "asc" },
     { key: "id", dir: "desc" },
@@ -34,14 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
       tr.dataset.id = movie.id;
       tr.dataset.title = movie.title;
       tr.dataset.year = movie.year;
-      tr.dataset.imdb = movie.imdb.toFixed(2);
+      //  Используем константу вместо числа 2
+      tr.dataset.imdb = movie.imdb.toFixed(IMDB_DECIMAL_PLACES);
       tr.innerHTML = `
         <td>#${movie.id}</td>
         <td>${movie.title}</td>
         <td>(${movie.year})</td>
-        <td>imdb: ${movie.imdb.toFixed(2)}</td>
+        <td>imdb: ${movie.imdb.toFixed(IMDB_DECIMAL_PLACES)}</td>
       `;
-      tbodyData.appendChild(tr);
+      // Используем append вместо appendChild
+      tbodyData.append(tr);
     });
   }
 
@@ -69,10 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < sortedRows.length; i++) {
       const targetRow = sortedRows[i];
       const currentRowInDOM = tbodyData.children[i];
-
       if (currentRowInDOM !== targetRow) {
         tbodyData.insertBefore(targetRow, currentRowInDOM);
-        console.log(`[Diff] Перемещен фильм: "${targetRow.dataset.title}" на индекс ${i}`);
       }
     }
   }
@@ -83,14 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const tbodyMemory = document.querySelector(".movie-tbody-memory");
   const headersMemory = document.querySelectorAll(".memory-th");
 
-  // Храним копию массива данных прямо в памяти JS
   let memoryMovies = [...moviesData];
 
-  // Функция рендеринга таблицы с нуля
   function renderMemoryTable() {
     if (!tbodyMemory) return;
 
-    // Полностью очищаем дерево элементов перед сборкой
     tbodyMemory.innerHTML = "";
 
     memoryMovies.forEach((movie) => {
@@ -98,20 +99,21 @@ document.addEventListener("DOMContentLoaded", () => {
       tr.dataset.id = movie.id;
       tr.dataset.title = movie.title;
       tr.dataset.year = movie.year;
-      tr.dataset.imdb = movie.imdb.toFixed(2);
+      //  Используем константу вместо числа 2
+      tr.dataset.imdb = movie.imdb.toFixed(IMDB_DECIMAL_PLACES);
 
       tr.innerHTML = `
         <td>#${movie.id}</td>
         <td>${movie.title}</td>
         <td>(${movie.year})</td>
-        <td>imdb: ${movie.imdb.toFixed(2)}</td>
+        <td>imdb: ${movie.imdb.toFixed(IMDB_DECIMAL_PLACES)}</td>
       `;
-      tbodyMemory.appendChild(tr);
+      //  Используем append вместо appendChild
+      tbodyMemory.append(tr);
     });
   }
 
   function sortInMemoryTable(key, dir) {
-    // Сортируем массив ОБЪЕКТОВ в памяти, а не DOM-элементы
     memoryMovies.sort((a, b) => {
       const valA = a[key];
       const valB = b[key];
@@ -126,30 +128,32 @@ document.addEventListener("DOMContentLoaded", () => {
         : String(valB).localeCompare(String(valA));
     });
 
-    // Обновляем стрелочки в шапке второй таблицы
     headersMemory.forEach((th) => (th.textContent = th.dataset.sort));
     const activeHeader = Array.from(headersMemory).find(
       (th) => th.dataset.sort === key,
     );
     if (activeHeader) activeHeader.textContent += dir === "asc" ? " ↑" : " ↓";
 
-    // Пересобираем DOM дерево на основе отсортированного массива памяти
     renderMemoryTable();
   }
 
-  // Первичный запуск отрисовки для In-Memory таблицы
   renderMemoryTable();
 
   /* ==========================================================================
      ОБЩИЙ ИНТЕРВАЛ ДЛЯ ОБЕИХ ТАБЛИЦ
      ========================================================================== */
-  setInterval(() => {
+
+  // Сохраняем интервал в переменную
+  // eslint-disable-next-line no-unused-vars
+  const intervalId = setInterval(() => {
     const { key, dir } = sortingSequence[currentSortStep];
 
-    // Запускаем оба метода параллельно
     if (tbodyData) sortDataAttributesTable(key, dir);
     if (tbodyMemory) sortInMemoryTable(key, dir);
 
     currentSortStep = (currentSortStep + 1) % sortingSequence.length;
-  }, 2000);
-});
+  }, SORT_INTERVAL_MS);
+};
+
+// Передаем именованную функцию в слушатель событий
+document.addEventListener("DOMContentLoaded", initSortingApp);
