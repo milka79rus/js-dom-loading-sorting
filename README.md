@@ -1,4 +1,13 @@
-# Webpack5
-![CI](https://github.com/Milka79rus/ahj-homeworks-env/actions/workflows/web.yml/badge.svg)
-[Руководство по настройке Webpack](https://webpack.js.org/guides/)
-[Руководство по настройке GitHub Actions](https://docs.github.com/en/actions/quickstart)
+# Домашнее задание к занятию "2. DOM" — Loading and Sorting
+[![Netology AHJ](https://github.com/Milka79rus/js-dom-loading-sorting/actions/workflows/web.yml/badge.svg)](https://github.com/Milka79rus/js-dom-loading-sorting/actions/workflows/web.yml)
+
+### Реализовано два параллельных интерфейса:
+
+1. **Сортировка через Data-Attributes (Advanced Diff Algorithm)**
+   * Все параметры фильмов хранятся в DOM в виде `data-*` атрибутов.
+   * Сортировка выполняется на основе извлечения элементов прямо из DOM-дерева.
+   * **Оптимизация (Diff):** Вместо деструктивной полной перерисовки (`innerHTML = ''`), реализован интеллектуальный алгоритм сравнения положений. Элементы перемещаются в DOM-дереве с помощью `insertBefore` точечно и только тогда, когда их реальное положение отличается от отсортированного массива.
+
+2. **In-Memory Сортировка**
+   * Данные хранятся и сортируются исключительно в оперативной памяти (массив объектов в JavaScript).
+   * После каждого шага сортировки происходит классическая полная пересборка DOM-дерева для этой таблицы.
